@@ -78,12 +78,17 @@ public class Simulation {
 	}
 
 	private boolean adjacentInfectious(int i, int j) {
+		// Check each adjacent square
 		for (int dx = -1; dx <= 1; dx++) {
 			for (int dy = -1; dy <= 1; dy++) {
+				// Get position of adjacent square
 				int adjX = j + dx, adjY = i + dy;
+				// Check whether indexes are out of bounds
 				if (adjY >= 0 && adjY < population.length) {
 					if (adjX >= 0 && adjX < population[0].length) {
+						// Check whether the square is actually itself
 						if (adjX != j && adjY != i) {
+							// Check whether the square is infected AND not social distancing
 							if (population[adjY][adjX].getState() == Person.State.INFECTED && !population[adjY][adjX].isSocialDistancing()) {
 								return true;
 							}
