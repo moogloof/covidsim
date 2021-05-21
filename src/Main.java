@@ -46,6 +46,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
 		// Set slider for social distancing stuff
 		slider = new Slider(0, 1.0, 0);
+		// Show tick marks on the slider
 		slider.setShowTickMarks(true);
 		slider.setShowTickLabels(true);
 		slider.setMajorTickUnit(0.2);
@@ -55,10 +56,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
 		// Set VBox for displaying slider
 		VBox vbox = new VBox();
+		// Add the sliderLabel and the slider to the vbox
 		vbox.getChildren().addAll(sliderLabel, slider);
 
 		// Specify layout of window
 		BorderPane layout = new BorderPane();
+		// Put button canvas and vbox in appropriate places
 		layout.setTop(startButton);
 		layout.setCenter(canvas);
 		layout.setRight(vbox);
@@ -125,9 +128,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
 	public void startSim() {
 		// Reset simulation
+		// Start a simulation with a population of 100x100 squares
 		sim = new Simulation(100, 100);
 
-		// Set the social distancing percentage
+		// Set the social distancing percentage if the slider is defined
 		if (slider != null) {
 			sim.updateSocialDistancing(slider.getValue());
 		}
