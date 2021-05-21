@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Simulation {
 	private int t; // Cycles elapsed
 	private Person[][] population; // Population grid
@@ -23,6 +25,21 @@ public class Simulation {
 			int randomJ = (int)(Math.random() * width);
 			population[randomI][randomJ].changeState(Person.State.INFECTED);
 		}
+	}
+
+	// Get width of population
+	public int getWidth() {
+		return population[0].length;
+	}
+
+	// Get height of population
+	public int getHeight() {
+		return population.length;
+	}
+
+	// Get person at specific spot on population grid
+	public Person getPerson(int i, int j) {
+		return population[i][j];
 	}
 
 	public void next() {
@@ -56,13 +73,17 @@ public class Simulation {
 							deathThreshold = 0.99;
 						}
 
-						// Dying or stay infected
-						if (chance > deathThreshold) {
+						// Recover if the person has survived for 4 cycles
+						if (population[i][j].getInfectedTime() >= 4) {
+							population[i][j].changeState(Person.State.RECOVERED);
+						} else if (chance > deathThreshold) {
+							// Dying or stay infected
 							population[i][j].changeState(Person.State.DEAD);
+						} else {
+							// Increment infected time of person
+							population[i][j].increaseInfectedTime();
 						}
 
-						// Increment infected time of person
-						population[i][j].increaseInfectedTime();
 						break;
 					case DEAD: // Break handler
 						// Do nothing if dead lol
@@ -99,5 +120,45 @@ public class Simulation {
 		}
 
 		return false;
+	}
+
+	public void updateSocialDistancing(double percent) {
+		// Update the people in the population who are social distancing according to percentage
+		// Current social distancing
+		int currentSD = 0;
+		// Target social distancing amount
+		int targetSD = (int)(percent * population.length * population[0].length);
+		// Indexes of currently social distancing people
+		List<Integer[]> currentSDIndexes = new ArrayList<Integer[]>();
+
+		// Get amount that is current social distancing
+		for (int i = 0; i < population.length; i++) {
+			for (int j = 0; j < population[0].length; j++) {
+				if (population[i][j].isSocialDistancing()) {
+					currentSD++;
+					// Add to current SD indexes list
+					currentSDIndexes.add(new Integer[] {i, j});
+				}
+			}
+		}
+
+		// Compare currently social distancing with target
+		if (currentSD > targetSD) {
+			// If there are more that are social distancing that needed, decrease
+			for (int i = 0; i < currentSD - targetSD; i++) {
+				// Get and make a random person not social distance
+				int toRemove = (int)(Math.random() * currentSDIndexes.size());
+				Integer[] personIndex = currentSDIndexes.get(toRemove);
+				population[personIndex[0]][personIndex[1]].setSocialDistancing(false);
+				currentSDIndexes.remove(toRemove);
+			}
+		} else if (currentSD < targetSD) {
+			// If there are less that are social distancing that needed, increase
+			for (int i = 0; i < targetSD - currentSD; i++) {
+				// Make random do social distancing I guess
+				// Not at all reliable, but realistic
+				population[(int)(Math.random() * population.length)][(int)(Math.random() * population[0].length)].setSocialDistancing(true);
+			}
+		}
 	}
 }

@@ -38,8 +38,18 @@ public class Person {
 		infectedTime++;
 	}
 
+	// Get infected time
+	public int getInfectedTime() {
+		return infectedTime;
+	}
+
 	// Whether person is social distancing or not
 	public boolean isSocialDistancing() {
 		return socialDistancing;
+	}
+
+	// Set whether the person is social distancing or not
+	public void setSocialDistancing(boolean socialDistancing) {
+		this.socialDistancing = socialDistancing;
 	}
 }
