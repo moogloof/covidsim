@@ -1,18 +1,21 @@
-public enum State {CLEAN, INFECTED, DEAD, RECOVERED} // Flags for state of person
-
 public class Person {
 	private State state; // Flag for state of person
 	private int age;
+	private int infectedTime;
 	private boolean socialDistancing;
+
+	public enum State {CLEAN, INFECTED, DEAD, RECOVERED} // Flags for state of person
 
 	public Person(int age, boolean socialDistancing) {
 		// Set age
 		this.age = age;
 		// Set whether individual is social distancing or not
 		this.socialDistancing = socialDistancing;
+		// Reset infected time
+		infectedTime = 0;
 
 		// Set initial state to clean
-		state = CLEAN;
+		state = State.CLEAN;
 	}
 
 	// Change the state of the person
@@ -23,5 +26,20 @@ public class Person {
 	// Get current state of the person
 	public State getState() {
 		return state;
+	}
+
+	// Get current age of person
+	public int getAge() {
+		return age;
+	}
+
+	// Increase infected time
+	public void increaseInfectedTime() {
+		infectedTime++;
+	}
+
+	// Whether person is social distancing or not
+	public boolean isSocialDistancing() {
+		return socialDistancing;
 	}
 }
