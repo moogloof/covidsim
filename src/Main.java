@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 // Java FX app
 public class Main extends Application implements EventHandler<ActionEvent> {
@@ -54,17 +55,27 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		// Set slider update handler when slider changes using lambda function
 		slider.setOnMouseReleased(e -> sim.updateSocialDistancing(slider.getValue()));
 
-		// Set VBox for displaying slider
-		VBox vbox = new VBox();
+		// Set VBox for displaying slider and button
+		VBox controlVBox = new VBox(5);
 		// Add the sliderLabel and the slider to the vbox
-		vbox.getChildren().addAll(sliderLabel, slider);
+		controlVBox.getChildren().addAll(sliderLabel, slider, startButton);
+
+		// Labels for the data on the population
+		Label infectedLabel = new Label("Infected: " + sim.getByState(Person.State.INFECTED));
+		Label deadLabel = new Label("Dead: " + sim.getByState(Person.State.DEAD));
+		Label healthyLabel = new Label("Recovered: " + sim.getByState(Person.State.RECOVERED));
+
+		// Set HBox for displaying the data about the population
+		HBox dataHBox = new HBox(30);
+		// Add labels for data to the HBox
+		dataHBox.getChildren().addAll(infectedLabel, deadLabel, healthyLabel);
 
 		// Specify layout of window
 		BorderPane layout = new BorderPane();
-		// Put button canvas and vbox in appropriate places
-		layout.setTop(startButton);
+		// Put canvas, data hbox, and vbox in appropriate places
 		layout.setCenter(canvas);
-		layout.setRight(vbox);
+		layout.setRight(controlVBox);
+		layout.setBottom(dataHBox);
 
 		// Scene is contents of window
 		Scene scene = new Scene(layout, 800, 600);
@@ -113,6 +124,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
 					// Update the state of the simulation
 					sim.next();
+
+					// Update the data labels about the simulation
+					infectedLabel.setText("Infected: " + sim.getByState(Person.State.INFECTED));
+					deadLabel.setText("Dead: " + sim.getByState(Person.State.DEAD));
+					healthyLabel.setText("Recovered: " + sim.getByState(Person.State.RECOVERED));
 				}
 			}
 		}.start();

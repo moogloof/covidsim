@@ -161,4 +161,20 @@ public class Simulation {
 			}
 		}
 	}
+
+	public int getByState(Person.State state) {
+		// Get amount of people with the specified state
+		int count = 0;
+
+		// Check each person in population for state
+		for (int i = 0; i < population.length; i++) {
+			for (int j = 0; j < population[0].length; j++) {
+				if (population[i][j].getState() == state) {
+					count++;
+				}
+			}
+		}
+
+		return count;
+	}
 }
