@@ -51,6 +51,9 @@ public class Simulation {
 
 		for (int i = 0; i < population.length; i++) {
 			for (int j = 0; j < population[0].length; j++) {
+				// Copy current population to to-be new population
+				newPopulation[i][j] = new Person(population[i][j]);
+
 				// Update the person's state using probabilities
 				switch (population[i][j].getState()) {
 					case CLEAN: // Clean handler
@@ -58,7 +61,7 @@ public class Simulation {
 						if (adjacentInfectious(i, j) && !population[i][j].isSocialDistancing()) {
 							// Random chance of getting infected
 							if (Math.random() < 0.75) {
-								population[i][j].changeState(Person.State.INFECTED);
+								newPopulation[i][j].changeState(Person.State.INFECTED);
 							}
 						}
 						break;
@@ -75,13 +78,13 @@ public class Simulation {
 
 						// Recover if the person has survived for 4 cycles
 						if (population[i][j].getInfectedTime() >= 4) {
-							population[i][j].changeState(Person.State.RECOVERED);
+							newPopulation[i][j].changeState(Person.State.RECOVERED);
 						} else if (chance > deathThreshold) {
 							// Dying or stay infected
-							population[i][j].changeState(Person.State.DEAD);
+							newPopulation[i][j].changeState(Person.State.DEAD);
 						} else {
 							// Increment infected time of person
-							population[i][j].increaseInfectedTime();
+							newPopulation[i][j].increaseInfectedTime();
 						}
 
 						break;
@@ -96,6 +99,9 @@ public class Simulation {
 				}
 			}
 		}
+
+		// Update the real population
+		population = newPopulation;
 	}
 
 	private boolean adjacentInfectious(int i, int j) {

@@ -18,6 +18,14 @@ public class Person {
 		state = State.CLEAN;
 	}
 
+	public Person(Person orig) {
+		// Copy the original person over to another
+		age = orig.age;
+		state = orig.state;
+		infectedTime = orig.infectedTime;
+		socialDistancing = orig.socialDistancing;
+	}
+
 	// Change the state of the person
 	public void changeState(State newState) {
 		state = newState;
